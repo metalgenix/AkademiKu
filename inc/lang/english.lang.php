@@ -1,25 +1,28 @@
-<?php if(!defined('GX_LIB')) die("Direct Access Not Allowed!");
+<?php
+
+defined('GX_LIB') or die('Direct Access Not Allowed!');
+/**
+ * GeniXCMS - Content Management System
+ * ============================================================ 
+ * Build : 20140925
+ * Version : 0.0.1 pre 
+ * Developed By : Puguh Wijayanto (www.metalgenix.com)
+ * License : MIT License
+ * ------------------------------------------------------------ 
+ * filename : english.lang.php 
+ * version : 0.0.1 pre 
+ * build : 20140928
+*/
+
 /*
-*    GeniXCMS - Content Management System
-*    ============================================================
-*    Build          : 20140925
-*    Version        : 0.0.1 pre
-*    Developed By   : Puguh Wijayanto (www.metalgenix.com)
-*    License        : MIT License
-*    ------------------------------------------------------------
-*    filename : english.lang.php
-*    version : 0.0.1 pre
-*    build : 20140928
+ *
+ * @author Puguh Wijayanto
+ * @since 0.0.1-pre
 */
 
-/**
-* @author Puguh Wijayanto
-* @since 0.0.1-pre
-*/
-
-/**
-* USER Account RELATED Translations
-* @since 0.0.1-pre
+/*
+ * USER Account RELATED Translations
+ * @since 0.0.1-pre
 */
 define('SIGN_IN', 'Sign In');
 define('PASS_NOT_MATCH', 'Password Didn\'t Match With Our Records. Please check Your password and try again.');
@@ -35,32 +38,31 @@ define('ACOUNT_NOT_ACTIVE', 'Your Account is not active. Please activate it firs
 define('ACOUNT_NOT_ACTIVE_BLOCK', 'Your Account is not active. Please contact Support for this problems.');
 define('PASSWORD_SENT_NOTIF', 'Your new Password just sent to your email account. Please check your email.');
 define('REQUEST_PASS', 'Request Password');
-define('TITLE_CANNOT_EMPTY','Title cannot be empty.');
-define('CATEGORY_CANNOT_EMPTY','Category cannot be empty.');
-define('USERID_CANNOT_EMPTY','Username cannot be empty.');
-define('PASS1_CANNOT_EMPTY','Password 1 cannot be empty.');
-define('PASS2_CANNOT_EMPTY','Password 2 cannot be empty.');
+define('TITLE_CANNOT_EMPTY', 'Title cannot be empty.');
+define('CATEGORY_CANNOT_EMPTY', 'Category cannot be empty.');
+define('USERID_CANNOT_EMPTY', 'Username cannot be empty.');
+define('PASS1_CANNOT_EMPTY', 'Password 1 cannot be empty.');
+define('PASS2_CANNOT_EMPTY', 'Password 2 cannot be empty.');
 define('USER', 'User');
 
-/** Token */
+/* Token */
 define('TOKEN_NOT_EXIST', 'Token not exist, or your time has expired. Please refresh your browser to get a new token.');
 
-/** Themes & Modules Related */
+/* Themes & Modules Related */
 define('THEME_ACTIVATED', 'Themes activated.');
 define('THEME_DEACTIVATED', 'Themes deactivated.');
 define('THEME_REMOVED', 'Themes removed.');
-define('NOFILE_UPLOADED','No Files Uploaded.');
-define('MODULES_DELETED','Modules Deleted.');
-define('MODULES_DEACTIVATED','Modules deactivated.');
-define('MODULES_ACTIVATED','Modules activated.');
+define('NOFILE_UPLOADED', 'No Files Uploaded.');
+define('MODULES_DELETED', 'Modules Deleted.');
+define('MODULES_DEACTIVATED', 'Modules deactivated.');
+define('MODULES_ACTIVATED', 'Modules activated.');
 
-/** Menu Related */
-define('MENUID_CANNOT_EMPTY','MenuID cannot be empty.');
-define('MENUNAME_CANNOT_EMPTY','Menu Name cannot be empty.');
+/* Menu Related */
+define('MENUID_CANNOT_EMPTY', 'MenuID cannot be empty.');
+define('MENUNAME_CANNOT_EMPTY', 'Menu Name cannot be empty.');
 define('MENU', 'Menu');
 
-
-/** Admin Dashboard Related */
+/* Admin Dashboard Related */
 define('DASHBOARD', 'Dashboard');
 define('POSTS', 'Posts');
 define('CATEGORIES', 'Categories');
@@ -75,14 +77,12 @@ define('LOGOUT', 'Log Out');
 define('ADD_NEW_POST', 'Add New Post');
 define('ADD_NEW_PAGE', 'Add New Page');
 
-/** 
-* Dashboard 
-*
-* @author Puguh Wijayanto
-* @since 0.0.1-pre
-*
-* @author Vakho Daneila
-* @since 0.0.3-patch
+/*
+ * Dashboard
+ * @author Puguh Wijayanto
+ * @since 0.0.1-pre
+ * @author Vakho Daneila
+ * @since 0.0.3-patch
 */
 define('LATEST_POST', 'Latest Post');
 define('STATISTIC', 'Statistic');
@@ -91,7 +91,7 @@ define('TOTAL_PAGE', 'Total Page');
 define('TOTAL_CAT', 'Total Categories');
 define('TOTAL_USER', 'Total Users');
 
-/** Posts & Pages Related */
+/* Posts & Pages Related */
 define('FIND_POSTS', 'Find Posts');
 define('FIND_PAGES', 'Find Pages');
 define('SEARCH_PAGES', 'Search Pages');
@@ -134,9 +134,9 @@ define('PUBLISHED_LOWER', 'published');
 define('UNPUBLISHED_LOWER', 'unpublished');
 define('LEFT_IT_BLANK_NOW_DATE', 'left it blank to make it now');
 
-/** User Related */
+/* User Related */
 define('ADD_USER', 'Add User');
-define('FIND_USER', 'Find user');
+define('FIND_USER', 'Find User');
 define('SEARCH_USER', 'Search user');
 define('ACTIVE', 'Active');
 define('INACTIVE', 'Inactive');
@@ -146,12 +146,16 @@ define('EMAIL', 'Email');
 define('GROUP', 'Group');
 define('JOIN_DATE', 'Join Date');
 define('ADMINISTRATOR', 'Administrator');
+define('SUPERVISOR', 'Supervisor');
+define('EDITOR', 'Editor');
 define('AUTHOR', 'Author');
+define('CONTRIBUTOR', 'Contributor');
+define('VIP_MEMBER', 'VIP Member');
 define('GENERAL_MEMBER', 'General Member');
 
 define('DELETE_CONFIRM', 'Are you sure you want to delete this?');
 
-/** Menu Related */
+/* Menu Related */
 define('MENU_NAME_CANNOT_EMPTY', 'Menu Name Cannot be Empty');
 define('MENU_TYPE_CANNOT_EMPTY', 'Menu Type Cannot be Empty');
 
@@ -164,7 +168,6 @@ define('MENU_CLASS', 'Menu CLass');
 define('MENU_CLASS_DESC', 'Class Style of the menu. <code>.class</code> means menu class is <em>class</em>');
 define('MENU_ITEMS', 'Menu Items');
 define('ADD_MENU_ITEM', 'Add Menu Item');
-
 
 define('MENU_PARENT', 'Parent Menu');
 define('MENU_TYPE', 'Menu Type');
@@ -181,8 +184,7 @@ define('MENU_MODULES_DESCR', 'Choose This if you want menu for Modules(Mod). Pic
 define('MENU_CUSTOM_LINK_DESCR', 'Choose This if you want menu with Custom Link Categories. Insert Custom Link');
 define('MENU_PARENT_DESCR', 'Choose Parent Menu');
 
-
-/** Themes Related */
+/* Themes Related */
 define('UPLOAD_THEMES', 'Upload Themes');
 define('ACTIVE_THEME', 'Active Themes');
 define('AVAILABLE_THEME', 'Available Themes');
@@ -191,7 +193,7 @@ define('INSTALL_THEME', 'Install Themes');
 define('BROWSE_THEMES', 'Browse Themes');
 define('BROWSE_THEME_DESC', 'choose the theme file. in zip compression');
 
-/** Modules Related */
+/* Modules Related */
 define('UPLOAD_MODULES', 'Upload Modules');
 define('ACTIVE_MODULE', 'Active Modules');
 define('NO_MODULES_FOUND', 'No Modules Found');
@@ -205,7 +207,7 @@ define('DESC', 'Description');
 define('VERSION', 'Version');
 define('LICENSE', 'License');
 
-/** Settings Related */
+/* Settings Related */
 define('CHANGE', 'Change');
 define('GENERAL', 'General');
 define('LOCALIZATION', 'Localization');
@@ -239,11 +241,10 @@ define('WEBSITE_LANG_DESC', 'Your Website System Language.');
 define('CHARSET', 'Default Charset');
 define('CHARSET_DESC', 'Your Website Charset/Encoding.');
 
-
-
-/** 
-* @author Vakho Daneila
-* @since 0.0.3-patch
+/*
+ *
+ * @author Vakho Daneila
+ * @since 0.0.3-patch
 */
 // Settings E-Mail
 
@@ -288,7 +289,7 @@ define('SETTINGS_LOGO_FAVICON_DESCR', 'Your Website Favicon URL');
 
 // Settings Library
 
-define('SETTINGS_LIBRARY', 'Enable or Disable Library');
+define('SETTINGS_LIBRARY', 'Assets Library');
 define('SETTINGS_LIBRARY_JQUERY', 'Enable JQuery');
 define('SETTINGS_LIBRARY_BOOTSTRAP', 'Enable Bootstrap');
 define('SETTINGS_LIBRARY_FAWESOME', 'Enable Fontawesome');
@@ -298,11 +299,13 @@ define('SETTINGS_LIBRARY_BVALIDATOR', 'Enable Bootstrap Validator');
 define('SETTINGS_LIBRARY_CDN', 'CDN');
 define('SETTINGS_LIBRARY_LOCAL', 'LOCAL');
 
-define('SETTINGS_LIBRARY_JQUERY_DESCR', 'Check this if you want to use Jquery. Fill the version of Jquery. Default version is 1.11.11');
+define('SETTINGS_LIBRARY_JQUERY_DESCR', 'Check this if you want to use Jquery. Fill the version of Jquery. Default version is 1.12.0');
 define('SETTINGS_LIBRARY_BOOTSTRAP_DESCR', 'Check this if you want to use Bootstrap. Bootstrap Version is not available, left it blank');
 define('SETTINGS_LIBRARY_FAWESOME_DESCR', 'Check this if you want to use Fontawesome. Fontawesome Version is not available, left it blank');
 define('SETTINGS_LIBRARY_EDITOR_DESCR', 'Check this if you want to use Editor. Editor Version is not available, left it blank');
 define('SETTINGS_LIBRARY_BVALIDATOR_DESCR', 'Check this if you want to use Bootstrap Validator. Bootstrap Validator Version is not available, left it blank');
+define('SETTINGS_LIBRARY_CDNURL', 'CDN Url');
+define('SETTINGS_LIBRARY_CDNURL_DESCR', 'write down the url of the CDN, if you don\'t use cdn, just write the site url.');
 
 // Settings Posts
 
@@ -323,17 +326,17 @@ define('SETTINGS_POSTS_PINGER_DESCR', 'Set the Pinger of Search Engine. Use {{do
 define('SETTINGS_PAYMENT', 'Payment');
 define('SETTINGS_PAYMENT_PAYPAL_CONF', 'PayPal Configuration');
 define('SETTINGS_PAYMENT_PAYPAL_CSYMB', 'Currency Symbol');
-define('SETTINGS_PAYMENT_SENDBOX', 'Enable Sandbox');
-define('SETTINGS_PAYMENT_SENDBOX_EN', 'Enable Sandbox?');
+define('SETTINGS_PAYMENT_SANDBOX', 'Enable Sandbox');
+define('SETTINGS_PAYMENT_SANDBOX_EN', 'Enable Sandbox?');
 define('SETTINGS_PAYMENT_PAYPALAPI_USR', 'PayPal API Username');
 define('SETTINGS_PAYMENT_PAYPALAPI_PWD', 'PayPal API Password');
-define('SETTINGS_PAYMENT_PAYPALAPI_SIGN', 'PayPal Signature1');
-define('SETTINGS_PAYMENT_ALERT', 'Attention, please fill these API Credentials from Your PayPal Account website. See the documentations at  
+define('SETTINGS_PAYMENT_PAYPALAPI_SIGN', 'PayPal Signature');
+define('SETTINGS_PAYMENT_ALERT', 'Attention, please fill these API Credentials from Your PayPal Account website. See the documentations at
                           <a href="https://developer.paypal.com/webapps/developer/docs/classic/api/apiCredentials/" target="_blank">
-                              https://developer.paypal.com');
+                              https://developer.paypal.com</a>');
 
 define('SETTINGS_PAYMENT_PAYPAL_CSYMB_DESCR', 'Pick a Currency, default is USD');
-define('SETTINGS_PAYMENT_SENDBOX_EN_DESCR', 'Enable Sandbox');
+define('SETTINGS_PAYMENT_SANDBOX_EN_DESCR', 'Enable Sandbox');
 define('SETTINGS_PAYMENT_PAYPALAPI_USR_DESCR', 'Your PayPal API Username');
 define('SETTINGS_PAYMENT_PAYPALAPI_PWD_DESCR', 'Your API Password');
 define('SETTINGS_PAYMENT_PAYPALAPI_SIGN_DESCR', 'Your PayPal Signature');
@@ -368,13 +371,13 @@ define('MSG_PAGE_UPDATED', 'Updated Successfully');
 define('MSG_PAGE_REMOVED', 'Removed Successfully');        // Needs Some Space :) Please Check It
 define('MSG_PAGE_DELETE', 'Are you sure you want to delete this item?');
 
-define('MSG_USER_ADDED', 'Added Successfully');  
-define('MSG_USER_UPDATED', 'Updated Successfully');  
-define('MSG_USER_REMOVED', 'Removed Successfully');  
-define('MSG_USER_EXIST', 'User Exist! Choose Another Username'); 
-define('MSG_USER_EMAIL_EXIST', 'Email Already Used. Please Use Another E-Mail:'); 
-define('MSG_USER_ACTIVATED', 'Activated Successfully.'); 
-define('MSG_USER_DEACTIVATED', 'Deactivated Successfully.'); 
+define('MSG_USER_ADDED', 'Added Successfully');
+define('MSG_USER_UPDATED', 'Updated Successfully');
+define('MSG_USER_REMOVED', 'Removed Successfully');
+define('MSG_USER_EXIST', 'User Exist! Choose Another Username');
+define('MSG_USER_EMAIL_EXIST', 'Email Already Used. Please Use Another E-Mail:');
+define('MSG_USER_ACTIVATED', 'Activated Successfully.');
+define('MSG_USER_DEACTIVATED', 'Deactivated Successfully.');
 define('MSG_USER_ACTIVATION_FAIL', 'Activation fail.');
 define('MSG_USER_DEACTIVATION_FAIL', 'Deactivation fail.');
 define('MSG_USER_PWD_MISMATCH', 'Password Did Not Match, Retype Your Password Again');
@@ -403,3 +406,36 @@ define('MSG_UNKNOWN_ERROR', 'Unknown Error Occurred!');
 // Other Functions
 
 define('REMOVE', 'remove');
+
+define('TAGS', 'Tags');
+define('TAGS_DESC', 'write tags separated by comma.');
+define('SECURITY', 'Security');
+define('GOOGLE_RECAPTCHA', 'Google reCaptcha');
+define('GOOGLE_RECAPTCHA_ENABLE', 'Enable Google Recaptcha ?');
+define('GOOGLE_RECAPTCHA_ENABLE_DESCR', 'Check this if you want to enable Google reCaptcha');
+define('GOOGLE_RECAPTCHA_LANG', 'Google reCaptcha Language');
+define('GOOGLE_RECAPTCHA_LANG_DESCR', 'type the language you want to use');
+define('GOOGLE_RECAPTCHA_SITEKEY', 'Google reCaptcha SiteKey');
+define('GOOGLE_RECAPTCHA_SITEKEY_DESCR', 'type the google recaptcha sitekey.');
+define('GOOGLE_RECAPTCHA_SECRET', 'Google reCaptcha Secret');
+define('GOOGLE_RECAPTCHA_SECRET_DESCR', 'type the google recaptcha secret.');
+define('GOOGLE_RECAPTCHA_INFO', '<i class="fa fa-warning"></i>
+                        To get Google reCaptcha <strong>SiteKey</strong> and <strong>Secret</strong>, go to
+                        <a target="_blank" href="https://www.google.com/recaptcha/intro/index.html">https://www.google.com/recaptcha</a>');
+
+define('GO', 'Go!');
+define('READ_MORE', 'Read More..');
+
+define('ADD_TAG', 'Add New Tag');
+define('TAG_NAME', 'Tag Name');
+define('TAG_CANNOT_EMPTY', 'Tag Name Cannot be Empty');
+define('MSG_TAG_ADDED', 'Tag Added');
+define('MSG_TAG_REMOVED', 'Tag Removed');
+define('MSG_TAG_UPDATED', 'Tag Updated');
+
+define('COMMENTS', 'Comments');
+define('FIND_COMMENTS', 'Find Comments');
+define('SEARCH_COMMENTS', 'Search Comments');
+
+define('PENDING', 'Pending');
+define('PENDING_COMMENTS', 'Pending Comments');

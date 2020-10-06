@@ -1,112 +1,54 @@
-/*
- * Base structure
- */
+/*a, #side-menu a, .navbar-inverse a:hover {*/
+    /*color: #333;*/
+/*}*/
 
-/* Move down content because we have a fixed navbar that is 50px tall */
-body {
-  padding-top: 50px;
+/*a:hover, #side-menu a:hover {*/
+    /*color: #000;*/
+/*}*/
+
+/*.nav .open > a, .nav .open > a:focus, .nav .open > a:hover {*/
+    /*color: #999;*/
+/*}*/
+
+/*.navbar-inverse a {*/
+    /*color: #eee;*/
+/*}*/
+
+
+* {
+  border-radius: 0px!important;
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
 }
 
-
-/*
- * Global add-ons
- */
-
-.sub-header {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+* {
+  border-top-left-radius: 0px!important;
+  border-top-right-radius: 0px!important;
+  border-bottom-left-radius: 0px!important;
+  border-bottom-right-radius: 0px!important;
 }
 
-/*
- * Top navigation
- * Hide default border to remove 1px line.
- */
-.navbar-fixed-top {
-  border: 0;
-}
-
-
-
-ul.submenu {
-  margin-left: 40px;
-  border-left: 2px solid #eee;
-  padding-left: 10px;
-}
-/*
- * Sidebar
- */
-
-/* Hide for mobile, show later */
-.sidebar {
-  display: none;
-}
-@media (min-width: 768px) {
-  .sidebar {
+.scrollup {
+    width: 40px;
+    height: 40px;
     position: fixed;
-    top: 51px;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    display: block;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
-    border-right: 1px solid #eee;
-  }
+    bottom: 40px;
+    right: 40px;
+    display: none;
+    /*text-indent: -9999px;*/
+    background-color: #222d32;
+    border-radius: 4px;
+    color: #efefef;
+    text-align: center;
+    vertical-align: middle;
+    padding: 4px;
+    cursor: pointer;
 }
 
-/* Sidebar navigation */
-.nav-sidebar {
-  margin-right: -21px; /* 20px padding + 1px border */
-  margin-bottom: 20px;
-  margin-left: -20px;
-}
-.nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
-}
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
-  color: #fff;
-  background-color: #428bca;
-}
-
-
-/*
- * Main content
- */
-
-.main {
-  padding: 20px;
-}
-@media (min-width: 768px) {
-  .main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
-}
-.main .page-header {
-  margin-top: 0;
-}
-
-
-/*
- * Placeholder dashboard ideas
- */
-
-.placeholders {
-  margin-bottom: 30px;
-  text-align: center;
-}
-.placeholders h4 {
-  margin-bottom: 0;
-}
-.placeholder {
-  margin-bottom: 20px;
-}
-.placeholder img {
-  display: inline-block;
-  border-radius: 50%;
+ul.users-list > li > img {
+    -webkit-border-radius: 50%!important;
+    -moz-border-radius:50%!important;
+    border-radius:50%!important;
+    opacity: .3;
 }

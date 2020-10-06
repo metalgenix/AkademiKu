@@ -1,89 +1,63 @@
 <?php
 /**
-* GeniXCMS - Content Management System
-* 
-* PHP Based Content Management System and Framework
-*
-* @package GeniXCMS
-* @since 0.0.1 build date 20150202
-* @version 0.0.3
-* @link https://github.com/semplon/GeniXCMS
-* @link http://genixcms.org
-* @author Puguh Wijayanto (www.metalgenix.com)
-* @copyright 2014-2015 Puguh Wijayanto
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
-
-if (isset($data['alertgreen'])) {
-    # code...
-    echo "<div class=\"alert alert-success\" >
-    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">
-        <span aria-hidden=\"true\">&times;</span>
-        <span class=\"sr-only\"><?=CLOSE;?></span>
-    </button>
-    <ul>";
-    foreach ($data['alertgreen'] as $alert) {
-        # code...
-        echo "<li>$alert</li>\n";
-    }
-    echo "</ul></div>";
-}elseif (isset($data['alertred'])) {
-    # code...
-    //print_r($data['alertred']);
-    echo "<div class=\"alert alert-danger\" >
-    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">
-        <span aria-hidden=\"true\">&times;</span>
-        <span class=\"sr-only\"><?=CLOSE;?></span>
-    </button>
-    <ul>";
-    foreach ($data['alertred'] as $alert) {
-        # code...
-        echo "<li>$alert</li>\n";
-    }
-    echo "</ul></div>";
-}
+ * GeniXCMS - Content Management System.
+ *
+ * PHP Based Content Management System and Framework
+ *
+ * @since 0.0.1 build date 20150202
+ *
+ * @version 1.1.11
+ *
+ * @link https://github.com/semplon/GeniXCMS
+ * 
+ *
+ * @author Puguh Wijayanto <metalgenix@gmail.com>
+ * @copyright 2014-2020 Puguh Wijayanto
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ */
 ?>
-<div class="row">
+
     <div class="col-md-12">
+        <?=Hooks::run('admin_page_notif_action', $data);?>
+    </div>
+    <section class="content-header">
 
         <h1><i class="fa fa-sitemap"></i> <?=MENUS;?>
             <div class="pull-right">
-                <button class="btn btn-success pull-right" data-toggle="modal" data-target="#myModal">
-                    <span class="glyphicon glyphicon-plus"></span> <?=ADD_MENU;?>
+                <button class="btn btn-success btn-sm pull-right" data-toggle="modal" data-target="#myModal">
+                    <span class="glyphicon glyphicon-plus"></span> 
+                    <span class="hidden-xs hidden-sm"><?=ADD_MENU;?></span>
                 </button>
             </div>
         </h1>
-        <hr />
-    </div>
-    <div class="col-sm-12">
+    </section>
+    <section class="content">
         <div class="row">
             <div class="col-sm-12">
             <?php
-                if (isset($data['menus']) && $data['menus'] != '') {
-                    # code...
-                     foreach (json_decode($data['menus']) as $k => $m) {
-                        # code...
-                        echo "
-                        <div class=\"panel-group\" id=\"accordion\">
-                          <div class=\"panel panel-default\">
-                            <div class=\"panel-heading\">
+            if (isset($data['menus']) && $data['menus'] != '') {
+                $menus = json_decode(Typo::Xclean($data['menus']), true);
+                foreach ($menus as $k => $m) {
+                    echo "
+                        <div class=\"box-group\" id=\"accordion\">
+                          <div class=\"panel box box-primary\">
+                            <div class=\"box-header with-border\">
                               <div class=\"panel-title clearfix\">
-                                <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#$k\">
+                                <a data-toggle=\"collapse\" data-parent=\"#accordion\" href=\"#{$k}\">
                                     <div class=\"col-md-4\">
-                                        <h4><strong>$m->name </strong></h4>
+                                        <h4><strong>{$m['name']} </strong></h4>
                                     </div>
-                                    <div class=\"col-md-4\">
+                                    <div class=\"col-md-4 box-title\">
                                         <h4>
                                         <small>
-                                            <em>$k</em>
+                                            <em>{$k}</em>
                                         </small>
                                         </h4>
                                     </div>
                                 </a>
                                 <div class=\"col-md-3\">
                                     <div class=\"input-group\">
-                                        <input type=\"text\" value=\"$m->class\" placeholder=\"Class Style\" class=\"form-control\">
+                                        <input type=\"text\" value=\"{$m['class']}\" placeholder=\"Class Style\" class=\"form-control\">
                                         <span class=\"input-group-btn\">
                                         <button name=\"editclass\" type=\"submit\" class=\"btn btn-default\">
                                             Go!
@@ -93,11 +67,11 @@ if (isset($data['alertgreen'])) {
                                     </div>
                                 </div>
                                 <div class=\"col-md-1\">
-                                    <h5><a href=\"index.php?page=menus&act=remove&menuid={$k}&token=".TOKEN."\"><i class=\"fa fa-remove\"></i></a></h5>
+                                    <h5 ><a href=\"index.php?page=menus&act=remove&menuid={$k}&token=".TOKEN."\"><i class=\"fa fa-remove\"></i> del</a></h5>
                                 </div>
                               </div>
                             </div>
-                            <div id=\"$k\" class=\"panel-collapse collapse\">
+                            <div id=\"{$k}\" class=\"panel-collapse collapse\">
                                 <div class=\"panel-body\">
                                     <!-- Nav tabs -->
                                         <ul class=\"nav nav-tabs\" role=\"tablist\">
@@ -110,18 +84,18 @@ if (isset($data['alertgreen'])) {
                                           <br />
                                               <div class=\"col-md-12\">
                                            ";
-                                            echo Menus::getMenuAdmin($k,'nav nav-pills nav-stacked');
+                    echo Menus::getMenuAdmin($k, 'nav nav-pills nav-stacked');
 
-                            echo "
+                    echo "
                                               </div>
                                           </div>
                                           <div class=\"tab-pane\" id=\"{$k}additem\">
                                           ";
-                                              $data['parent'] = Menus::isHadParent('', $k);
-                                              //print_r($data['parent']);
-                                              $data['menuid'] = $k;
-                                              System::inc('menus_form', $data);
-                            echo "
+                    $data['parent'] = Menus::isHadParent('', $k);
+                                     //print_r($data['parent']);
+                                     $data['menuid'] = $k;
+                    System::inc('menus_form', $data);
+                    echo '
                                           </div>
                                         </div>
 
@@ -132,17 +106,17 @@ if (isset($data['alertgreen'])) {
                       </div>
 
 
-                    ";
-                    }
+                    ';
                 }
+            }
 
                     //echo "<pre>"; print_r(json_decode($data['menus'])); echo "</pre>";
                 ?>
                 </div>
         </div>
 
-    </div>
-</div>
+    </section>
+
 
 <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -187,3 +161,4 @@ if (isset($data['alertgreen'])) {
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+

@@ -1,323 +1,408 @@
-<?php if(!defined('GX_LIB')) die("Direct Access Not Allowed!");
+<?php
+
+defined('GX_LIB') or die('Direct Access Not Allowed!');
 /**
-* GeniXCMS - Content Management System
-* 
-* PHP Based Content Management System and Framework
-*
-* @package GeniXCMS
-* @since 0.0.1 build date 20141006
-* @version 0.0.3
-* @link https://github.com/semplon/GeniXCMS
-* @link http://genixcms.org
-* @author Puguh Wijayanto (www.metalgenix.com)
-* @copyright 2014-2015 Puguh Wijayanto
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
+ * GeniXCMS - Content Management System
+ *
+ * PHP Based Content Management System and Framework
+ *
+ * @since 0.0.1 build date 20150312
+ *
+ * @version 1.1.11
+ *
+ * @link https://github.com/semplon/GeniXCMS
+ * 
+ *
+ * @author Puguh Wijayanto <metalgenix@gmail.com>
+ * @copyright 2014-2020 Puguh Wijayanto
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ */
 
-$data['sitetitle'] = USERS;
-if(isset($_GET['act'])){ $act = $_GET['act']; }else{$act="";}
-switch ($act) {
-    case 'edit':
-        # code...
-        $data[] = "";
-        switch (isset($_POST['edituser'])) {
-            case true:
-                # code...
-                //check token first 
-                if (!isset($_POST['token']) || !Token::isExist($_POST['token'])) {
-                    // VALIDATE ALL
-                    $alertred[] = TOKEN_NOT_EXIST;
-                }
-                
+if (User::access(1) || (isset($_GET['id']) && User::id(Session::val('username')) == $_GET['id'])) {
+    $data['sitetitle'] = USERS;
+    if (isset($_GET['act'])) {
+        $act = $_GET['act'];
+    } else {
+        $act = '';
+    }
 
-                // VALIDATE ALL
-                if(!User::is_exist($_POST['userid'])){
-                    $alertred[] = MSG_USER_EXIST;
-                }
-                
-                if(!User::is_email($_POST['email'])){
-                    $alertred[] = MSG_USER_EMAIL_EXIST;
-                }
+    // search query
+    $where = ' 1 ';
+    $qpage = '';
+    if (isset($_GET['q']) && $_GET['q'] != '') {
+        $q = Typo::cleanX($_GET['q']);
+        $where .= "AND (A.`userid` LIKE '%%{$q}%%' OR A.`email` LIKE '%%{$q}%%') ";
+        $qpage .= "&q={$_GET['q']}";
+    }
+    if (isset($_GET['from']) && $_GET['from'] != '') {
+        $from = Typo::cleanX($_GET['from']);
+        $where .= "AND A.`join_date` >= '{$from}' ";
+        $qpage .= "&from={$from}";
+    }
+    if (isset($_GET['to']) && $_GET['to'] != '') {
+        $to = Typo::cleanX($_GET['to']);
+        $where .= "AND A.`join_date` <= '{$to}' ";
+        $qpage .= "&to={$to}";
+    }
+    if (isset($_GET['group']) && $_GET['group'] != '') {
+        $group = Typo::int($_GET['group']);
+        $where .= "AND A.`group` = '{$group}' ";
+        $qpage .= "&group={$group}";
+    }
+    if (isset($_GET['status']) && $_GET['status'] != '') {
+        $status = Typo::int($_GET['status']);
+        $where .= "AND A.`status` = '{$status}' ";
+        $qpage .= "&status={$status}";
+    }
 
-                if(!isset($alertred)){
+    $max = '10';
+    if (isset($_GET['paging'])) {
+        $paging = Typo::int($_GET['paging']);
+        $offset = ($paging - 1) * $max;
+    } else {
+        $paging = 1;
+        $offset = 0;
+    }
 
-                    $vars = array(
-                                    'id' => sprintf('%d',$_GET['id']),
-                                    'user' => array(
-                                                    'userid' => $_POST['userid'],
-                                                    'email' => $_POST['email'],
-                                                    'group' => $_POST['group']
-                                                )
-                                    
-                                ); 
-                    if(!empty($_POST['pass']) || $_POST['pass'] != ""){
-                        $pass = array(
-                                    'pass' => User::randpass($_POST['pass'])
-                                );
-                        $vars['user'] =  array_merge($vars['user'], $pass);
-                        //print_r($vars);
-                    }  
-                    User::update($vars);
-                    $alertgreen[] = "User : ".User::userid($_GET['id'])." Updated";
-                    
-                    if (isset($alertgreen)) {
-                        # code...
-                        $data['alertgreen'] = $alertgreen;
+    switch ($act) {
+        case 'edit':
+            $data[] = '';
+            switch (isset($_POST['edituser'])) {
+                case true:
+                    //check token first
+                    $token = Typo::cleanX($_POST['token']);
+                    if (!isset($_POST['token']) || !Token::validate($token)) {
+                        // VALIDATE ALL
+                        $alertDanger[] = TOKEN_NOT_EXIST;
                     }
-                }else{
-                    $data['alertred'] = $alertred;
-                }
-                
-                if(isset($_POST['token'])){ Token::remove($_POST['token']); }
-                break;
-            
-            default:
-                # code...
-                break;
-            }
-        Theme::admin('header', $data);
-        System::inc('user_form', $data);
-        Theme::admin('footer');
-        break;
-    case 'del':
-            if(isset($_GET['id'])){
-                $user = User::userid($_GET['id']);
-                if (!isset($_GET['token']) || !Token::isExist($_GET['token'])) {
-                    // VALIDATE ALL
-                    $data['alertred'][] = TOKEN_NOT_EXIST;
-                }else{
-                    User::delete($_GET['id']);
-                    $data['alertgreen'][] = USER." ".$user." ".MSG_USER_REMOVED;
-                }
-                if(isset($_GET['token'])){ Token::remove($_GET['token']); }
-            }else{
-                $data['alertred'][] = MSG_USER_NO_ID_SELECTED;
-            }
-            $data['usr'] = Db::result("SELECT * FROM `user` ORDER BY `userid` ASC LIMIT 10");
-            $data['num'] = Db::$num_rows;
-            Theme::admin('header', $data);
-            System::inc('user', $data);
-            Theme::admin('footer');
-        break;
-    case 'active':
-            if (!isset($_GET['token']) || !Token::isExist($_GET['token'])) {
-                // VALIDATE ALL
-                $data['alertred'][] = TOKEN_NOT_EXIST;
-            }else{
-                if(User::activate($_GET['id'])){
-                    $data['alertgreen'][] = USER." ".User::userid($_GET['id'])."".MSG_USER_ACTIVATED;
-                }else{
-                    $data['alertred'][] = USER." ".User::userid($_GET['id'])."".MSG_USER_ACTIVATION_FAIL;
-                }
 
-            }
-            if(isset($_GET['token'])){ Token::remove($_GET['token']); }
-            $data['usr'] = Db::result("SELECT * FROM `user` ORDER BY `userid` ASC LIMIT 10");
-            $data['num'] = Db::$num_rows;
-            Theme::admin('header', $data);
-            System::inc('user', $data);
-            Theme::admin('footer');
-        break;
-        
-    case 'inactive':
-            if (!isset($_GET['token']) || !Token::isExist($_GET['token'])) {
-                // VALIDATE ALL
-                $data['alertred'][] = TOKEN_NOT_EXIST;
-            }else{
-                if(User::deactivate($_GET['id'])){
-                    $data['alertgreen'][] = USER." ".User::userid($_GET['id'])."".MSG_USER_DEACTIVATED;
-                }else{
-                    $data['alertred'][] = USER." ".User::userid($_GET['id'])."".MSG_USER_DEACTIVATION_FAIL;
-                }
-            }
-            if(isset($_GET['token'])){ Token::remove($_GET['token']); }
-            $data['usr'] = Db::result("SELECT * FROM `user` ORDER BY `userid` ASC LIMIT 10");
-            $data['num'] = Db::$num_rows;
-            Theme::admin('header', $data);
-            System::inc('user', $data);
-            Theme::admin('footer');
-        break;
-        
-
-    default:
-        # code...
-        $data[] = "";
-        switch (isset($_POST['adduser'])) {
-            case true:
-                # code...
-                // CHECK TOKEN FIRST 
-                //echo Token::isExist($_POST['token']);
-                if (!isset($_POST['token']) || !Token::isExist($_POST['token'])) {
-                    // VALIDATE ALL
-                    $alertred[] = TOKEN_NOT_EXIST;
-                }
-
-                if (!isset($_POST['userid']) || $_POST['userid'] == "") {
-                    // VALIDATE ALL
-                    $alertred[] = USERID_CANNOT_EMPTY;
-                }
-                if (!isset($_POST['pass1']) || $_POST['pass1'] == "") {
-                    // VALIDATE ALL
-                    $alertred[] = PASS1_CANNOT_EMPTY;
-                }
-                if (!isset($_POST['pass2']) || $_POST['pass2'] == "") {
-                    // VALIDATE ALL
-                    $alertred[] = PASS2_CANNOT_EMPTY;
-                }
-
-                if(!User::is_exist($_POST['userid'])){
-                    $alertred[] = MSG_USER_EXIST;
-                }
-                if(!User::is_same($_POST['pass1'], $_POST['pass2'])){
-                    $alertred[] = MSG_USER_PWD_MISMATCH;
-                }
-                if(!User::is_email($_POST['email'])){
-                    $alertred[] = MSG_USER_EMAIL_EXIST;
-                }
-
-                if(!isset($alertred)){
-
-                    $vars = array(
-                                    'user' => array(
-                                                    'userid' => $_POST['userid'],
-                                                    'pass' => User::randpass($_POST['pass1']),
-                                                    'email' => $_POST['email'],
-                                                    'group' => $_POST['group'],
-                                                    'status' => '1',
-                                                    'join_date' => date("Y-m-d H:i:s")
-                                                ),
-                                    
-                                );   
-                    User::create($vars);
-                    Token::remove($_POST['token']);
-                    $data['alertgreen'][] = USER." {$_POST['userid']}, ".MSG_USER_ADDED;
-                }else{
-                    $data['alertred'] = $alertred;
-                }
-                if(isset($_POST['token'])){ Token::remove($_POST['token']); }
-                break;
-            
-            default:
-                # code...
-                break;
-        }
-
-        if(isset($_POST['action'])) {
-            $action = $_POST['action'];
-        }else{
-            $action = '';
-        }
-        if(isset($_POST['user_id'])) { $user_id = $_POST['user_id']; } else { $user_id = ""; }
-        switch ($action) {
-
-            case 'activate':
-                # code...
-                if (!isset($_POST['token']) || !Token::isExist($_POST['token'])) {
-                    // VALIDATE ALL
-                    $alertred[] = TOKEN_NOT_EXIST;
-                }
-                if (isset($alertred)) {
-                    # code...
-                    $data['alertred'] = $alertred;
-                }else{
-                    foreach ($user_id as $id) {
-                        # code...
-                        User::activate($id);
+                    // VALIDATE ALL check if inputed userid is not same
+                    $userid = Typo::cleanX($_POST['userid']);
+                    $olduserid = Typo::cleanX($_POST['olduserid']);
+                    $id = Typo::int($_GET['id']);
+                    if (!User::isSame($olduserid, $userid) && User::validate($userid)) {
+                        $alertDanger[] = MSG_USER_EXIST;
                     }
-                }
-                if(isset($_POST['token'])){ Token::remove($_POST['token']); }
-                break;
-            case 'deactivate':
-                # code...
-                if (!isset($_POST['token']) || !Token::isExist($_POST['token'])) {
-                    // VALIDATE ALL
-                    $alertred[] = TOKEN_NOT_EXIST;
-                }
-                if (isset($alertred)) {
-                    # code...
-                    $data['alertred'] = $alertred;
-                }else{
-                    foreach ($user_id as $id) {
-                        # code...
-                        User::deactivate($id);
+
+                    if (!User::isEmail($_POST['email'], $id)) {
+                        $alertDanger[] = MSG_USER_EMAIL_EXIST;
                     }
-                }
-                if(isset($_POST['token'])){ Token::remove($_POST['token']); }
-                break;
-            case 'delete':
-                # code...
-                if (!isset($_POST['token']) || !Token::isExist($_POST['token'])) {
-                    // VALIDATE ALL
-                    $alertred[] = TOKEN_NOT_EXIST;
-                }
-                if (isset($alertred)) {
-                    # code...
-                    $data['alertred'] = $alertred;
-                }else{
-                    foreach ($user_id as $id) {
-                        # code...
+
+                    if (!isset($alertDanger)) {
+
+                        
+                        $group = (User::access(1)) ? Typo::int($_POST['group']) : Session::val('group');
+                        $userid = (User::access(0)) ? Typo::cleanX($_POST['userid']) : User::id($id);
+
+                        $vars = array(
+                                        'id' => $id,
+                                        'user' => array(
+                                                        'userid' => $userid,
+                                                        'email' => Typo::cleanX($_POST['email']),
+                                                        'group' => $group,
+                                                    ),
+
+                                    );
+                        if (!empty($_POST['pass']) || $_POST['pass'] != '') {
+                            $pass = array(
+                                        'pass' => User::randpass($_POST['pass']),
+                                    );
+                            $vars['user'] = array_merge($vars['user'], $pass);
+                            //print_r($vars);
+                        }
+                        User::update($vars);
+                        $alertSuccess[] = 'User : '.User::userid($id).' Updated';
+
+                        if (isset($alertSuccess)) {
+                            $data['alertSuccess'] = $alertSuccess;
+                        }
+                        Hooks::run('user_submit_edit_action', $_GET);
+                    } else {
+                        $data['alertDanger'] = $alertDanger;
+                    }
+
+                    if (isset($_POST['token'])) {
+                        Token::remove($token);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            Theme::admin('header', $data);
+            System::inc('user_form', $data);
+            Theme::admin('footer');
+            break;
+        case 'del':
+            if (User::access(1)) {
+                if (isset($_GET['id'])) {
+                    $id = Typo::int($_GET['id']);
+                    $user = User::userid($id);
+                    $token = Typo::cleanX($_GET['token']);
+                    if (!isset($_GET['token']) || !Token::validate($token)) {
+                        // VALIDATE ALL
+                        $data['alertDanger'][] = TOKEN_NOT_EXIST;
+                    } else {
                         User::delete($id);
+                        Hooks::run('user_delete_action', $_GET);
+                        $data['alertSuccess'][] = USER.' '.$user.' '.MSG_USER_REMOVED;
+                    }
+                    if (isset($_GET['token'])) {
+                        Token::remove($token);
+                    }
+                } else {
+                    $data['alertDanger'][] = MSG_USER_NO_ID_SELECTED;
+                }
+                $data['usr'] = Db::result("SELECT * FROM `user` WHERE {$where} ORDER BY `userid` ASC LIMIT {$offset}, {$max}");
+                $data['num'] = Db::$num_rows;
+                $page = array(
+                            'paging' => $paging,
+                            'table' => 'user',
+                            'where' => $where,
+                            'max' => $max,
+                            'url' => 'index.php?page=users'.$qpage,
+                            'type' => 'pager',
+                        );
+                $data['paging'] = Paging::create($page);
+                Theme::admin('header', $data);
+                System::inc('user', $data);
+                Theme::admin('footer');
+            }
+            break;
+        case 'active':
+            if (User::access(1)) {
+                $id = Typo::int($_GET['id']);
+                $token = Typo::cleanX($_GET['token']);
+                if (!isset($_GET['token']) || !Token::validate($_GET['token'])) {
+                    // VALIDATE ALL
+                    $data['alertDanger'][] = TOKEN_NOT_EXIST;
+                } else {
+                    if (User::activate($id)) {
+                        $data['alertSuccess'][] = USER.' '.User::userid($id).' '.MSG_USER_ACTIVATED;
+                    } else {
+                        $data['alertDanger'][] = USER.' '.User::userid($id).' '.MSG_USER_ACTIVATION_FAIL;
                     }
                 }
-                if(isset($_POST['token'])){ Token::remove($_POST['token']); }
-                break;
-            
-            default:
-                # code...
-                break;
-        }
+                if (isset($_GET['token'])) {
+                    Token::remove($token);
+                }
+                $data['usr'] = Db::result("SELECT * FROM `user` WHERE {$where} ORDER BY `userid` ASC LIMIT {$offset}, {$max}");
+                $data['num'] = Db::$num_rows;
+                $page = array(
+                            'paging' => $paging,
+                            'table' => 'user',
+                            'where' => $where,
+                            'max' => $max,
+                            'url' => 'index.php?page=users'.$qpage,
+                            'type' => 'pager',
+                        );
+                $data['paging'] = Paging::create($page);
+                Theme::admin('header', $data);
+                System::inc('user', $data);
+                Theme::admin('footer');
+            }
+            break;
 
+        case 'inactive':
+            if (User::access(1)) {
+                $token = Typo::cleanX($_GET['token']);
+                $id = Typo::int($_GET['id']);
+                if (!isset($_GET['token']) || !Token::validate($token)) {
+                    // VALIDATE ALL
+                    $data['alertDanger'][] = TOKEN_NOT_EXIST;
+                } else {
+                    if (User::deactivate($id)) {
+                        $data['alertSuccess'][] = USER.' '.User::userid($id).' '.MSG_USER_DEACTIVATED;
+                    } else {
+                        $data['alertDanger'][] = USER.' '.User::userid($id).' '.MSG_USER_DEACTIVATION_FAIL;
+                    }
+                }
+                if (isset($_GET['token'])) {
+                    Token::remove($token);
+                }
+                $data['usr'] = Db::result("SELECT * FROM `user` WHERE {$where} ORDER BY `userid` ASC LIMIT {$offset}, {$max}");
+                $data['num'] = Db::$num_rows;
+                $page = array(
+                            'paging' => $paging,
+                            'table' => 'user',
+                            'where' => $where,
+                            'max' => $max,
+                            'url' => 'index.php?page=users'.$qpage,
+                            'type' => 'pager',
+                        );
+                $data['paging'] = Paging::create($page);
+                Theme::admin('header', $data);
+                System::inc('user', $data);
+                Theme::admin('footer');
+            }
+            break;
 
-        // search query 
-        $where = " 1 ";
-        $qpage = "";
-        if(isset($_GET['q']) && $_GET['q'] != ''){
-            $where .= "AND (`userid` LIKE '%%{$_GET['q']}%%' OR `email` LIKE '%%{$_GET['q']}%%') ";
-            $qpage .= "&q={$_GET['q']}";
-        }
-        if(isset($_GET['from']) && $_GET['from'] != ''){
-            $where .= "AND `join_date` >= '{$_GET['from']}' ";
-            $qpage .= "&from={$_GET['from']}";
-        }
-        if(isset($_GET['to']) && $_GET['to'] != ''){
-            $where .= "AND `join_date` <= '{$_GET['to']}' ";
-            $qpage .= "&to={$_GET['to']}";
-        }
-        if(isset($_GET['status']) && $_GET['status'] != ''){
-            $where .= "AND `status` LIKE '%%{$_GET['status']}%%' ";
-            $qpage .= "&status={$_GET['status']}";
-        }
+        default:
+            $data[] = '';
+            if (User::access(1)) {
+                switch (isset($_POST['adduser'])) {
+                    case true:
+                        // CHECK TOKEN FIRST
+                        //echo Token::validate($_POST['token']);
+                        $userid = Typo::cleanX($_POST['userid']);
+                        $email = Typo::cleanX($_POST['email']);
+                        $group = Typo::int($_POST['group']);
+                        $pass1 = Typo::strip($_POST['pass1']);
+                        $pass2 = Typo::strip($_POST['pass2']);
 
+                        $token = Typo::cleanX($_POST['token']);
+                        if (!isset($_POST['token']) || !Token::validate($token)) {
+                            // VALIDATE ALL
+                            $alertDanger[] = TOKEN_NOT_EXIST;
+                        }
 
-        $max = "10";
-        if(isset($_GET['paging'])){
-            $paging = $_GET['paging'];
-            $offset = ($_GET['paging']-1)*$max;
-        }else{
-            $paging = 1;
-            $offset = 0;
-        }
+                        if (!isset($userid) || $userid == '') {
+                            // VALIDATE ALL
+                            $alertDanger[] = USERID_CANNOT_EMPTY;
+                        }
+                        if (!isset($_POST['pass1']) || $_POST['pass1'] == '') {
+                            // VALIDATE ALL
+                            $alertDanger[] = PASS1_CANNOT_EMPTY;
+                        }
+                        if (!isset($_POST['pass2']) || $_POST['pass2'] == '') {
+                            // VALIDATE ALL
+                            $alertDanger[] = PASS2_CANNOT_EMPTY;
+                        }
 
-        $data['usr'] = Db::result("SELECT * FROM `user` WHERE {$where} ORDER BY `userid` ASC LIMIT {$offset}, {$max}");
-        $data['num'] = Db::$num_rows;
-        Theme::admin('header', $data);
-        System::inc('user', $data);
-        Theme::admin('footer');
+                        if (User::validate($userid)) {
+                            $alertDanger[] = MSG_USER_EXIST;
+                        }
+                        if (!User::isSame($_POST['pass1'], $_POST['pass2'])) {
+                            $alertDanger[] = MSG_USER_PWD_MISMATCH;
+                        }
+                        if (!User::isEmail($_POST['email'])) {
+                            $alertDanger[] = MSG_USER_EMAIL_EXIST;
+                        }
 
-        $page = array(
-                    'paging' => $paging,
-                    'table' => 'user',
-                    'where' => $where,
-                    'max' => $max,
-                    'url' => 'index.php?page=users'.$qpage,
-                    'type' => 'pager'
-                );
-        echo Paging::create($page);
+                        if (!isset($alertDanger)) {
+                            $vars = array(
+                                            'user' => array(
+                                                            'userid' => $userid,
+                                                            'pass' => User::randpass($_POST['pass1']),
+                                                            'email' => $email,
+                                                            'group' => $group,
+                                                            'status' => '1',
+                                                            'join_date' => date('Y-m-d H:i:s'),
+                                                        ),
 
-        break;
+                                        );
+                            User::create($vars);
+                            Hooks::run('user_submit_add_action', $_POST);
+                            Token::remove($token);
+                            $data['alertSuccess'][] = USER." {$userid}, ".MSG_USER_ADDED;
+                        } else {
+                            $data['alertDanger'] = $alertDanger;
+                        }
+                        if (isset($_POST['token'])) {
+                            Token::remove($token);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if (isset($_POST['action'])) {
+                    $action = Typo::cleanX($_POST['action']);
+                } else {
+                    $action = '';
+                }
+                if (isset($_POST['user_id'])) {
+                    $user_id = $_POST['user_id'];
+                } else {
+                    $user_id = '';
+                }
+                switch ($action) {
+                    case 'activate':
+                        $token = Typo::cleanX($_POST['token']);
+                        if (!isset($_POST['token']) || !Token::validate($token)) {
+                            // VALIDATE ALL
+                            $alertDanger[] = TOKEN_NOT_EXIST;
+                        }
+                        if (isset($alertDanger)) {
+                            $data['alertDanger'] = $alertDanger;
+                        } else {
+                            foreach ($user_id as $id) {
+                                User::activate($id);
+                            }
+                        }
+                        if (isset($_POST['token'])) {
+                            Token::remove($token);
+                        }
+                        break;
+                    case 'deactivate':
+                        $token = Typo::cleanX($_POST['token']);
+                        if (!isset($_POST['token']) || !Token::validate($token)) {
+                            // VALIDATE ALL
+                            $alertDanger[] = TOKEN_NOT_EXIST;
+                        }
+                        if (isset($alertDanger)) {
+                            $data['alertDanger'] = $alertDanger;
+                        } else {
+                            foreach ($user_id as $id) {
+                                User::deactivate($id);
+                            }
+                        }
+                        if (isset($_POST['token'])) {
+                            Token::remove($token);
+                        }
+                        break;
+                    case 'delete':
+                        $token = Typo::cleanX($_POST['token']);
+                        if (!isset($_POST['token']) || !Token::validate($token)) {
+                            // VALIDATE ALL
+                            $alertDanger[] = TOKEN_NOT_EXIST;
+                        }
+                        if (isset($alertDanger)) {
+                            $data['alertDanger'] = $alertDanger;
+                        } else {
+                            foreach ($user_id as $id) {
+                                User::delete($id);
+                            }
+                        }
+                        if (isset($_POST['token'])) {
+                            Token::remove($token);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
+                $data['usr'] = Db::result("SELECT *, A.`id` as `id` FROM `user` AS A 
+                        LEFT JOIN `user_detail` AS B 
+                        ON A.`userid` = B.`userid` 
+                        WHERE {$where} ORDER BY A.`userid` ASC LIMIT {$offset}, {$max}");
+                $data['num'] = Db::$num_rows;
+                $page = array(
+                            'paging' => $paging,
+                            'table' => [
+                                'user' => ['A', 'LEFT JOIN', 'userid'],
+                                'user_detail' => ['B', 'LEFT JOIN', 'userid']
+                            ],
+                            'select' => 'A.`id` ',
+                            'where' => $where,
+                            'max' => $max,
+                            'url' => 'index.php?page=users'.$qpage,
+                            'type' => 'pager',
+                        );
+                $data['paging'] = Paging::create($page);
+
+                Theme::admin('header', $data);
+                System::inc('user', $data);
+                Theme::admin('footer');
+            }
+            break;
+    }
+} else {
+    Theme::admin('header');
+    Control::error('noaccess');
+    Theme::admin('footer');
 }
-
 
 /* End of file users.control.php */
 /* Location: ./inc/lib/Control/Backend/users.control.php */

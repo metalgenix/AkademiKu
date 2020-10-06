@@ -1,23 +1,35 @@
 {
     "name": "genix/cms",
+    "type": "project",
     "description": "Simple and Free Opensource CMS and Framework",
-    "version": "0.0.3",
-    "homepage": "http://genixcms.org",
-    "keywords": ["genixcms", "genix", "cms", "metalgenix"],
+    "version": "1.1.11",
+    "homepage": "https://genix.me",
+    "keywords": ["genixcms", "genix", "cms", "metalgenix", "blog", "blog software", "bootstrap"],
     "license": "MIT",
     "authors": [
         {
             "name": "Puguh Wijayanto",
-            "email": "hangbowl@gmail.com"
+            "homepage": "https://github.com/semplon",
+            "role": "Developer"
         }
     ],
     "config": {
         "vendor-dir": "inc/lib/Vendor"
     },
     "require": {
-        "php": ">=5.3.0",
-        "phpmailer/phpmailer": "5.2.9",
-        "angelleye/paypal-php-library": "2.0.3",
-        "lsmonki/php-ixr": "1.7.5"
+        "php": ">=7.2.5",
+        "phpmailer/phpmailer": "6.1.7",
+        "kissifrot/php-ixr": "1.8.3",
+        "google/recaptcha": "1.2.4",
+        "omnipay/common": "v3.0.4",
+        "omnipay/paypal": "v3.0.2",
+        "studio-42/elfinder": "2.1.57",
+        "league/oauth2-client": "2.5.0",
+        "league/oauth2-google": "3.0.3",
+        "symfony/dependency-injection": "v5.1.5",
+        "symfony/http-kernel": "v5.1.5",
+        "guzzlehttp/guzzle": "6.5.5",
+        "php-http/guzzle6-adapter": "v2.0.1",
+        "ezyang/htmlpurifier": "v4.13.0"
     }
 }

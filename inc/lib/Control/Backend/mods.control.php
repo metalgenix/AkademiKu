@@ -1,23 +1,28 @@
-<?php if(!defined('GX_LIB')) die("Direct Access Not Allowed!");
+<?php
+
+defined('GX_LIB') or die('Direct Access Not Allowed!');
 /**
-* GeniXCMS - Content Management System
-* 
-* PHP Based Content Management System and Framework
-*
-* @package GeniXCMS
-* @since 0.0.1 build date 20141006
-* @version 0.0.3
-* @link https://github.com/semplon/GeniXCMS
-* @link http://genixcms.org
-* @author Puguh Wijayanto (www.metalgenix.com)
-* @copyright 2014-2015 Puguh Wijayanto
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
-$data['sitetitle'] = MODULES;
+ * GeniXCMS - Content Management System
+ *
+ * PHP Based Content Management System and Framework
+ *
+ * @since 0.0.1 build date 20141006
+ *
+ * @version 1.1.11
+ *
+ * @link https://github.com/semplon/GeniXCMS
+ * 
+ *
+ * @author Puguh Wijayanto <metalgenix@gmail.com>
+ * @copyright 2014-2020 Puguh Wijayanto
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ */
+
+$mod = Typo::cleanX($_GET['mod']);
+$data['sitetitle'] = Mod::name($mod);
 Theme::admin('header', $data);
-Mod::options($_GET['mod']);
-Theme::admin('footer');
+Mod::options($mod);
+Theme::admin('footer', $data);
 
 /* End of file mods.control.php */
 /* Location: ./inc/lib/Control/Backend/mods.control.php */

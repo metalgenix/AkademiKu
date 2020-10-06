@@ -1,80 +1,75 @@
 <?php
 /**
-* GeniXCMS - Content Management System
-* 
-* PHP Based Content Management System and Framework
-*
-* @package GeniXCMS
-* @since 0.0.1 build date 20150202
-* @version 0.0.3
-* @link https://github.com/semplon/GeniXCMS
-* @link http://genixcms.org
-* @author Puguh Wijayanto (www.metalgenix.com)
-* @copyright 2014-2015 Puguh Wijayanto
-* @license http://www.opensource.org/licenses/mit-license.php MIT
-*
-*/
-if (isset($data['alertgreen'])) {
-    # code...
-    echo "<div class=\"alert alert-success\" >
-    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">
-        <span aria-hidden=\"true\">&times;</span>
-        <span class=\"sr-only\">Close</span>
-    </button>
-    <ul>";
-    foreach ($data['alertgreen'] as $alert) {
-        # code...
-        echo "<li>$alert</li>\n";
-    }
-    echo "</ul></div>";
-}elseif (isset($data['alertred'])) {
-    # code...
-    //print_r($data['alertred']);
-    echo "<div class=\"alert alert-danger\" >
-    <button type=\"button\" class=\"close\" data-dismiss=\"alert\">
-        <span aria-hidden=\"true\">&times;</span>
-        <span class=\"sr-only\">Close</span>
-    </button>
-    <ul>";
-    foreach ($data['alertred'] as $alert) {
-        # code...
-        echo "<li>$alert</li>\n";
-    }
-    echo "</ul></div>";
-}
+ * GeniXCMS - Content Management System.
+ *
+ * PHP Based Content Management System and Framework
+ *
+ * @since 0.0.1 build date 20150202
+ *
+ * @version 1.1.11
+ *
+ * @link https://github.com/semplon/GeniXCMS
+ * 
+ *
+ * @author Puguh Wijayanto <metalgenix@gmail.com>
+ * @copyright 2014-2020 Puguh Wijayanto
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ */
 ?>
 <form action="" method="post">
-<div class="row">
+
     <div class="col-md-12">
-        <h1><i class="fa fa-group"></i> Edit User 
+        <?=Hooks::run('admin_page_notif_action', $data);?>
+    </div>
+    <section class="content-header">
+        <h1><i class="fa fa-group"></i> Edit User
             <div class="pull-right">
-                <button  class="btn btn-success " type="submit" name="edituser">
+                <button  class="btn btn-success btn-sm" type="submit" name="edituser">
                     <span class="glyphicon glyphicon-ok"></span>
-                    Update
+                    <span class="hidden-xs hidden-sm">Update</span>
                 </button>
-                <a class="btn btn-danger  " href="index.php?page=users">
+                <a class="btn btn-danger  btn-sm" href="<?=(User::access(2)) ? 'index.php?page=users' : 'index.php';?>">
                     <span class="glyphicon glyphicon-remove"></span>
-                    Cancel
+                    <span class="hidden-xs hidden-sm">Cancel</span>
                 </a>
-                
             </div>
         </h1>
-        <hr />
-    </div>
-    <div class="col-sm-12">
+    </section>
+    <section class="content">
+        <!-- Default box -->
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    Modify User
+                </h3>
+
+                <div class="box-tools pull-right">
+
+                </div>
+            </div>
+            <div class="box-body">
     <div class="row">
 
     <div class="col-sm-6">
         <div class="form-group">
             <label>Userid</label>
-            <input type="text" name="userid" class="form-control" value="<?=User::userid($_GET['id']);?>">
+            <?php if (User::access(0)) {
+                $id = isset($_GET['id']) ? Typo::int($_GET['id']): '';
+                $userid = User::userid($id);
+    ?>
+                <input type="text" name="userid" class="form-control" value="<?=$userid; ?>">
+                <input type="hidden" name="olduserid" class="form-control" value="<?=$userid; ?>">
+            <?php
+} else {
+    echo '<div class="form-control">'.$userid.'</div>';
+} ?>
             <small>Only Admin can edit userid</small>
         </div>
     </div>
     <div class="col-sm-6">
         <div class="form-group">
             <label>Email</label>
-            <input type="text" name="email" class="form-control" value="<?=User::email($_GET['id']);?>">
+            <input type="text" name="email" class="form-control" value="<?=User::email($id);?>">
             <small>Email must be different with another.</small>
         </div>
     </div>
@@ -86,36 +81,36 @@ if (isset($data['alertgreen'])) {
         </div>
     </div>
     <div class="col-sm-6">
+    <?php if (User::access(1)) {
+    ?>
         <div class="form-group">
             <label>Group Level</label>
-            <?php 
-            if(User::group($_GET['id']) == 0){
-                $adm = "SELECTED";
-                $mem = "";
-                $aut = "";
-            }elseif(User::group($_GET['id']) == 3){
-                $aut = "SELECTED";
-                $adm = "";
-                $mem = "";
-            }elseif(User::group($_GET['id']) == 4){
-                $mem = "SELECTED";
-                $adm = "";
-                $aut = "";
-            }
-
-            ?>
-            <select name="group" class="form-control">
-                <option value="0" <?=$adm;?>>Administrator</option>
-                <option value="3" <?=$aut;?>>Author</option>
-                <option value="4" <?=$mem;?>>General Members</option>
-            </select> 
+            <?php
+            $var = array(
+                    'name' => 'group',
+                    'selected' => User::group($id),
+                    'update' => true,
+                );
+        echo User::dropdown($var); ?>
+            
             <small>Group Level of the user.</small>
         </div>
+    <?php
+} ?>
     </div>
-        
+
 
     </div>
-    </div>
-</div>
-<input type="hidden" name="token" value="<?=$_GET['token'];?>">
+
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                Footer
+            </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    </section>
+
+<input type="hidden" name="token" value="<?=TOKEN?>">
 </form>

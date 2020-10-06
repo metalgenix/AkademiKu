@@ -1,27 +1,9 @@
 Options +SymLinksIfOwnerMatch
 RewriteEngine On
-#RewriteBase /
-
-#------------------------------------------------------------------------------//
-### Don't Touch this unless You know what you are doing ########################
-#------------------------------------------------------------------------------//
-#
-# Changing without knowing will affect your URL Friendly 
-# or even ruin it.
-#
-###############################################################################//
-
-#RewriteRule ^(.*)/(.*)	index.php?post=$2 [L]
-
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond %{REQUEST_FILENAME} !-d
-#RewriteRule . /index.php [L]
-RewriteRule ^paging/([0-9]+)$                   index.php?paging=$1 [L]
-RewriteRule ^([0-9]+)/(.+)/paging/([0-9]+)$     index.php?cat=$1&paging=$3 [L]
-RewriteRule ^([0-9]+)/(.+)$                     index.php?cat=$1 [L]
-RewriteRule ^(.+)\.html$	                    index.php?page=$1 [L]
-RewriteRule ^(.+)/([0-9]+)$                     index.php?post=$2 [L]
-RewriteRule ^sitemap$	                        index.php?page=sitemap [L]
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
 
 
 # gZip compression
